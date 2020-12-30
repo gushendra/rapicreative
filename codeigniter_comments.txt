@@ -1,0 +1,76 @@
+note code igniter
+
+1. merubah tempat load asset bootstrap
+   untuk assets menggunakan base_url --> kalau untuk link menggunakan site_url
+   --> copy template-->rubah posis file style dengan <?=base_url()?>
+   --> berikutnya tambahkan link "http://localhost/mypos/" contohnya -> di file config -> $config['base_url']
+   --> setelah itu menambahkan helper url pada autoload.php -> $autoload['helper'] = array('url');
+2. Menghilangkan index.php pada link http://localhost/mypos/index.php/dasboard --?
+   yaitu dengan merubah pada config.php --> $config['index_page'] = 'index.php'; --> dengan menghapusnya menjadi $config['index_page'] = '';
+   --> berikutnya membuat .htaccess dengan sintak yang dapat di peroleh dari user_guide CI (index.php)
+   --> ini berfungsi untuk pada proses link tidak lagi ada link index.php
+	 
+3.set database
+    1. configurasi di autoload libraries
+    2. dibagian config posisi database
+4. membatasi hak user dengan helper. membuat fungsi dengan nama yang berisi helper
+   tetapi untuk memanggilnya cukup menggunkan fungsi saja. memanggil nya lewat config
+   autoload bagian helper.
+
+5. agar tampilan sistem menjadi dinamis , pergunakan template
+untuk Menggunakan templating gunakan libraries
+
+--> buat file di libraries-> Template.php
+--> untuk sintak lihat di original pos
+--> berikutnya di controller dashboard di rubah secriptnya , tidak lagi menggunakan load->view --> tetapi
+    menjadi $this->template->load("nama template","nama contentnya")
+--> update juga di autoload.php file di bagian array libraries
+--> kemudian buat file di view template.php (sebagai basic tampilan sistem)
+
+6. setting database
+--> di autoload-->libraries
+--> di bagian config->database.php
+
+7. Menampilkan user yang login di template 
+   --> buat file libraries , contoh : Fungsi.php ( sintak seperti di app mypos)
+   --> tambahkan di model ( cth : User_m.php / lihat sintak di app mypos)
+   --> load fungsi ini di autoload libraries
+  
+8. just note
+   --> contoh sintak : $post = $this->input->post(null,TRUE); ini artinya jika semua post
+   --> konsep MVC, yang berhubungan dengan tampilan di view
+       berhubungan dengan proses di controller
+       berhubungan dengan database taruh di model
+
+9. memahami penggunaan helper CI pada proses pembatasan hak access
+   --> penulisan filenya harus ada helpernya , cth fungsi_helper.php
+   --> update di bagian autoload -> helper, dengan menuliskan nama filenya aja tanpa helper
+
+10. error di database jika ada field yang datanya unik
+   cara menanggulanginya :
+   --> dengan membuat function baru untuk check valuenya di model (lihat di item_m)
+   --> di controller pada bagian process, tambahkan sintak if 
+
+11. upload file kedalam database
+   --> hal pertama yang harus diingat , setiap ada form inputan dengan upload file, maka di form harus ada sintak endtype multipart from data
+   --> agar lebih gampang dapat menggunakan form helper dari CI , yang di pakai adalan form multipart
+       dengan sitaks  <?php echo form_open_multipart(), dan ditutup dengan <?php echo form_close(); ?>
+   --> untuk bagian process :
+       sebelum proses simpan database, tambahkan  (contoh) 
+	
+	    $config['upload_path'] = './uploads/product/';
+            $config['allowed_types'] = 'gif|jpg|png';
+            $config['max_size'] = 2048;
+            $config['file_name'] = 'item-'.date('ymd').'-'.substr(md5(rand()),0,10);
+            $this->load->library('upload',$config);
+
+12. menampilkan data dari table dengan menggunakan form helper
+   --> di autoload-->bagian helper--> kemudian tambahkan form
+
+13. membuat QRCode Generator di CI 
+   -->install libraries endroid/qr-code dengan menggunakan composer
+   -->berikutnya tinnggal di buat bisa menggunakan sintak dasar(bisa di lihat di github)
+   --> sebelum di jalankan , pastikan libraries ini sudah di load
+       untuk itu silhakan chek di autoload->config->bagiaian composer ->'assets/vendor/autoload.php';
+   --> selanjutkan di coba di jalankan.
+ 
